@@ -1,0 +1,66 @@
+#cloud-config
+
+# ユーザ作成
+users:
+  - name: dev_staff
+    groups: adm, dialout, cdrom, floppy, sudo, audio, dip, video, plugdev, netdev
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell: /bin/bash
+    lock_passwd: true
+
+# SSH パスワード認証無効化
+ssh_pwauth: false
+
+# タイムゾーン設定
+timezone: Asia/Tokyo
+
+# ロケール設定
+locale: ja_JP.UTF-8
+
+# パッケージインストール
+package_reboot_if_required: true
+package_update: true
+package_upgrade: true
+packages:
+  - fonts-noto-cjk
+  - language-pack-ja
+  - snapd
+  - gcc
+  - openssh-client
+  - build-essential
+  - procps
+  - curl
+  - file
+  - git
+
+# Snap パッケージインストール
+snap:
+  commands:
+    - snap install bottom
+
+# ファイル書き込み
+write_files:
+  - path: /home/dev_staff/.bashrc
+    defer: true
+    append: true
+    owner: dev_staff:dev_staff
+    permissions: "0644"
+    content: |
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  - path: /etc/wsl.conf
+    append: true
+    content: |
+      [user]
+      default=wsl-dev_staff
+
+# コマンド実行
+runcmd:
+  - apt -U -y full-upgrade
+  - sudo -u dev_staff /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  - sudo -u dev_staff /home/linuxbrew/.linuxbrew/bin/brew install vim tmux lazygit eza ripgrep bat fd git-delta lnav procs
+  - sudo -u dev_staff git config --global pager.diff delta
+  - sudo -u dev_staff git config --global pager.show delta
+  - sudo -u dev_staff git config --global pager.log delta
+  - sudo -u dev_staff git config --global pager.reflog delta
+  # - sudo -u dev_staff git config --global user.name (名前)
+  # - sudo -u dev_staff git config --global user.email (メールアドレス)
