@@ -51,7 +51,7 @@ write_files:
     append: true
     content: |
       [user]
-      default=wsl-dev_staff
+      default=dev_staff
 
 # コマンド実行
 runcmd:
