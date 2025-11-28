@@ -2,7 +2,9 @@
 
 ## 参考
 
- [cloud-init](https://cloud-init.io/)
+ [Cloud-init](https://cloud-init.io/)
+
+ [Cloud-init documentation](https://docs.cloud-init.io/en/latest/)
 
 ## 配置フォルダ
 
